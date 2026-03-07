@@ -1,0 +1,15 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.idea/
+*.iml
+
+# OS
+.DS_Store
+
+# Env files
+.env
