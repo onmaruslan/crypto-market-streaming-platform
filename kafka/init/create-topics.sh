@@ -6,9 +6,9 @@ sleep 20
 
 kafka-topics --create \
   --if-not-exists \
-  --topic job_postings_raw \
-  --bootstrap-server kafka:9092 \
+  --topic "${KAFKA_TOPIC_CRYPTO}" \
+  --bootstrap-server "${KAFKA_BOOTSTRAP_SERVERS}" \
   --partitions 1 \
   --replication-factor 1
 
-echo "Kafka topic created"
+echo "Kafka topic created: ${KAFKA_TOPIC_CRYPTO}"

@@ -1,1 +1,1 @@
-# job-market-analytics
+# crypto-market-streaming-platform
