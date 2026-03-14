@@ -8,14 +8,13 @@ engine = create_engine(POSTGRES_URI)
 
 
 def aggregate_trades_1m():
-
-    with engine.connect() as conn:
+    with engine.begin() as conn:
         last_minute = conn.execute(
             text("SELECT max(minute_bucket) FROM trades_1m_agg")
         ).scalar()
 
         if last_minute is None:
-            last_minute = "1970-01-01"
+            last_minute = pd.Timestamp("1970-01-01", tz="UTC")
 
         query = """
         SELECT
@@ -23,12 +22,12 @@ def aggregate_trades_1m():
             symbol,
             date_trunc('minute', trade_time) AS minute_bucket,
             count(*) AS trade_count,
-            sum(quantity) AS volume,
-            avg(price) AS avg_price,
-            min(price) AS min_price,
-            max(price) AS max_price
+            round(sum(quantity)::numeric, 4) AS volume,
+            round(avg(price)::numeric, 2) AS avg_price,
+            round(min(price)::numeric, 2) AS min_price,
+            round(max(price)::numeric, 2) AS max_price
         FROM market_trades
-        WHERE trade_time > :last_minute
+        WHERE trade_time >= :last_minute
         GROUP BY exchange, symbol, minute_bucket
         """
 
@@ -38,21 +37,26 @@ def aggregate_trades_1m():
             params={"last_minute": last_minute},
         )
 
-    if df.empty:
-        print("No new data to aggregate")
-        return
+        if df.empty:
+            print("No new data to aggregate.")
+            return
 
-    df["volume"] = df["volume"].round(4)
-    df["avg_price"] = df["avg_price"].round(2)
-    df["min_price"] = df["min_price"].round(2)
-    df["max_price"] = df["max_price"].round(2)
+        conn.execute(
+            text(
+                """
+                DELETE FROM trades_1m_agg
+                WHERE minute_bucket >= :last_minute
+                """
+            ),
+            {"last_minute": last_minute},
+        )
 
-    df.to_sql(
-        "trades_1m_agg",
-        engine,
-        if_exists="append",
-        index=False,
-        method="multi",
-    )
+        df.to_sql(
+            "trades_1m_agg",
+            con=conn,
+            if_exists="append",
+            index=False,
+            method="multi",
+        )
 
-    print(f"Inserted {len(df)} rows into trades_1m_agg")
+        print(f"Inserted {len(df)} rows into trades_1m_agg")
