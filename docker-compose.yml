@@ -2,11 +2,14 @@ x-airflow-common: &airflow-common
   build: .
   environment: &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__API__BASE_URL: http://localhost:8080
+    AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-api-server:8080/execution/
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg://airflow:airflow@postgres:5432/airflow
     AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW_FERNET_KEY}
     AIRFLOW__API__SECRET_KEY: ${AIRFLOW_SECRET_KEY}
     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
     AIRFLOW__CORE__AUTH_MANAGER: airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
+    AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW_API_AUTH_JWT_SECRET}
 
     PYTHONPATH: /opt/airflow
 
@@ -112,17 +115,14 @@ services:
     environment:
       SERVICES: s3
       DEBUG: "1"
+      S3_BUCKET: ${S3_BUCKET}
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
     ports:
       - "4566:4566"
     volumes:
       - localstack_data:/var/lib/localstack
       - ./localstack/init:/etc/localstack/init/ready.d
-    healthcheck:
-      test: [ "CMD-SHELL", "curl -fsS http://localhost:4566/_localstack/health | grep '\"s3\": \"available\"' || exit 1" ]
-      interval: 5s
-      timeout: 5s
-      retries: 20
+
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
@@ -184,6 +184,24 @@ services:
       - ./src:/opt/airflow/src
     depends_on:
       kafka:
+        condition: service_healthy
+
+  raw-consumer:
+    build: .
+    command: python src/runners/run_consumer.py
+    environment:
+      PYTHONPATH: /opt/airflow
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      S3_ENDPOINT_URL: ${S3_ENDPOINT_URL}
+      S3_BUCKET: ${S3_BUCKET}
+    volumes:
+      - ./src:/opt/airflow/src
+    depends_on:
+      kafka:
+        condition: service_healthy
+      localstack:
         condition: service_healthy
 
 volumes:

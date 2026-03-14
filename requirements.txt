@@ -8,5 +8,6 @@ psycopg[binary]>=3.2,<4
 kafka-python-ng
 websockets>=14,<16
 pandas>=2,<3
+pyarrow
 requests>=2,<3
 python-dotenv>=1,<2
