@@ -19,3 +19,17 @@ CREATE TABLE IF NOT EXISTS loaded_staging_files (
     loaded_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 """
+
+TRADES_1M_AGG_DDL = """
+CREATE TABLE IF NOT EXISTS trades_1m_agg (
+    exchange TEXT NOT NULL,
+    symbol TEXT NOT NULL,
+    minute_bucket TIMESTAMPTZ NOT NULL,
+    trade_count integer NOT NULL,
+    volume numeric NOT NULL,
+    avg_price numeric NOT NULL,
+    min_price numeric NOT NULL,
+    max_price numeric NOT NULL,
+    PRIMARY KEY (exchange, symbol, minute_bucket)
+);
+"""
