@@ -33,3 +33,17 @@ CREATE TABLE IF NOT EXISTS trades_1m_agg (
     PRIMARY KEY (exchange, symbol, minute_bucket)
 );
 """
+
+OHLC_1M_DDL = """
+CREATE TABLE IF NOT EXISTS ohlc_1m (
+    exchange TEXT NOT NULL,
+    symbol TEXT NOT NULL,
+    minute_bucket TIMESTAMPTZ NOT NULL,
+    open_price numeric NOT NULL,
+    high_price numeric NOT NULL,
+    low_price numeric NOT NULL,
+    close_price numeric NOT NULL,
+    volume numeric NOT NULL,
+    PRIMARY KEY (exchange, symbol, minute_bucket)
+);
+"""
