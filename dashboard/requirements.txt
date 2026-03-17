@@ -1,0 +1,4 @@
+streamlit
+pandas>=2,<3
+sqlalchemy
+psycopg[binary]>=3.2,<4
