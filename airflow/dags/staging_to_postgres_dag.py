@@ -26,7 +26,7 @@ def load_new_staging_files():
 with DAG(
     dag_id="staging_to_postgres",
     start_date=datetime(2024, 1, 1),
-    schedule="@hourly",
+    schedule=None,
     catchup=False,
 ) as dag:
     load_task = PythonOperator(

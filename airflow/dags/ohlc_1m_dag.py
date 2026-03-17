@@ -13,7 +13,7 @@ def run_aggregation():
 with DAG(
     dag_id="ohlc_1m_aggregation",
     start_date=datetime(2024, 1, 1),
-    schedule="*/5 * * * *",
+    schedule=None,
     catchup=False,
 ) as dag:
     aggregate_task = PythonOperator(

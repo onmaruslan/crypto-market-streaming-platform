@@ -17,7 +17,7 @@ def process_files():
 with DAG(
     dag_id="raw_to_parquet",
     start_date=datetime(2024, 1, 1),
-    schedule="@hourly",
+    schedule=None,
     catchup=False,
 ) as dag:
     transform_task = PythonOperator(
