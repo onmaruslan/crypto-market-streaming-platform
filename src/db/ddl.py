@@ -47,3 +47,17 @@ CREATE TABLE IF NOT EXISTS ohlc_1m (
     PRIMARY KEY (exchange, symbol, minute_bucket)
 );
 """
+
+SPREAD_1M_DDL = """
+CREATE TABLE IF NOT EXISTS spread_1m (
+    symbol TEXT NOT NULL,
+    minute_bucket TIMESTAMPTZ NOT NULL,
+    min_exchange TEXT NOT NULL,
+    min_price numeric NOT NULL,
+    max_exchange TEXT NOT NULL,
+    max_price numeric NOT NULL,
+    spread_abs numeric NOT NULL,
+    spread_pct numeric NOT NULL,
+    PRIMARY KEY (symbol, minute_bucket)
+);
+"""

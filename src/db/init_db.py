@@ -6,6 +6,7 @@ from src.db.ddl import (
     LOADED_STAGING_FILES_DDL,
     TRADES_1M_AGG_DDL,
     OHLC_1M_DDL,
+    SPREAD_1M_DDL,
 )
 
 
@@ -17,3 +18,4 @@ def init_db():
         conn.execute(text(LOADED_STAGING_FILES_DDL))
         conn.execute(text(TRADES_1M_AGG_DDL))
         conn.execute(text(OHLC_1M_DDL))
+        conn.execute(text(SPREAD_1M_DDL))
