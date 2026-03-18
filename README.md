@@ -358,15 +358,23 @@ The dashboard reads from PostgreSQL and displays:
 
 ---
 
-## How to run
+## Quick Start
 
-### 1. Start infrastructure
+### 1. Setup environment variables
+
+Create `.env` file from the example:
+
+```bash
+cp .env.example .env
+```
+
+### 2. Start infrastructure
 
 ```bash
 docker compose up -d --build
 ```
 
-### 2. Create PostgreSQL tables
+### 3. Create PostgreSQL tables
 
 If `db-init` is not wired into startup yet, initialize manually:
 
@@ -374,7 +382,7 @@ If `db-init` is not wired into startup yet, initialize manually:
 docker compose exec airflow-scheduler python src/runners/init_db.py
 ```
 
-### 3. Open services
+### 4. Open services
 
 - Airflow: `http://localhost:8080`
 - Kafka UI: `http://localhost:8081`
