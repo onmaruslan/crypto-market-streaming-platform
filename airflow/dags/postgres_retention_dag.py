@@ -24,15 +24,6 @@ def cleanup_postgres_tables():
         conn.execute(
             text(
                 """
-                DELETE FROM loaded_staging_files
-                WHERE trade_time < now() - interval '90 days'
-                """
-            )
-        )
-
-        conn.execute(
-            text(
-                """
                 DELETE FROM trades_1m_agg
                 WHERE minute_bucket < now() - interval '90 days'
                 """

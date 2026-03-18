@@ -244,7 +244,7 @@ spread_df = load_spread(selected_symbol)
 if spread_df.empty:
     st.info("No spread data available for the selected symbol.")
 else:
-    spread_chart_df = spread_df.set_index("minute_bucket")[["spread_pct"]]
+    spread_chart_df = spread_df.set_index("minute_bucket")[["spread_abs"]]
     st.line_chart(spread_chart_df)
 
     with st.expander("Show spread table"):
