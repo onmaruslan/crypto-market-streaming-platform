@@ -9,6 +9,7 @@ with DAG(
     start_date=datetime(2024, 1, 1),
     schedule="*/5 * * * *",
     catchup=False,
+    is_paused_upon_creation=False,
 ) as dag:
     raw_to_parquet = TriggerDagRunOperator(
         task_id="trigger_raw_to_parquet",

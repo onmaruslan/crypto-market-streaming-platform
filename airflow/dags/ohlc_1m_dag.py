@@ -15,6 +15,7 @@ with DAG(
     start_date=datetime(2024, 1, 1),
     schedule=None,
     catchup=False,
+    is_paused_upon_creation=False,
 ) as dag:
     aggregate_task = PythonOperator(
         task_id="aggregate_ohlc_1m",

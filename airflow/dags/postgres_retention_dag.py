@@ -56,6 +56,7 @@ with DAG(
     start_date=datetime(2024, 1, 1),
     schedule="@daily",
     catchup=False,
+    is_paused_upon_creation=False,
 ) as dag:
     cleanup_task = PythonOperator(
         task_id="cleanup_postgres_tables",

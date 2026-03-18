@@ -28,6 +28,7 @@ with DAG(
     start_date=datetime(2024, 1, 1),
     schedule=None,
     catchup=False,
+    is_paused_upon_creation=False,
 ) as dag:
     load_task = PythonOperator(
         task_id="load_new_staging_files",
